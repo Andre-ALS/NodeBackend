@@ -176,7 +176,7 @@ etag@~1.8.1:
   resolved "https://registry.yarnpkg.com/etag/-/etag-1.8.1.tgz#41ae2eeb65efa62268aebfea83ac7d79299b0887"
   integrity sha1-Qa4u62XvpiJorr/qg6x9eSmbCIc=
 
-express-handlebars@^3.0.0:
+express-handlebars@^3.0.0, express-handlebars@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/express-handlebars/-/express-handlebars-3.0.2.tgz#4f70f1bb06cade5436a7a2c90efc2c9af1cf71e7"
   integrity sha512-rPaSqR8xPnSqfvWvI8Mhtn7nifaMmySq6yhWkjH07Ks/nuDaRngJyf7eDN2I7PBkNVdZHf0Bz+1rY1yrZFdx8g==

@@ -13,7 +13,18 @@ function generateToken (params = {}) {
 	return jwt.sign(params, authConfig.secret, {
 		expiresIn: 86400,
 	});
-} 
+}
+
+router.get('/users-list', async (req, res) => {
+
+	try {
+		const users = await User.find({});
+		res.send(users);
+
+	} catch (err) {
+		return res.status(400).send( {error: 'Get all failed' });
+	}
+});
 
 router.post('/register', async (req, res) => {
 	const { email } = req.body;
@@ -60,43 +71,41 @@ router.post('/authenticate', async (req, res) => {
 	}
 });
 
-router.post('/forgot_password', async (req, res) => {
+router.post('/forgot-password', async (req, res) => {
 	const { email } = req.body;
 
 	try {
+		const user = await User.findOne({ email });
 		
-		const user = await User.findOne({ email});
-
 		if (!user) {
 			return res.status(400).send({ error: 'User not found' });
 		}
-
+		
 		const token = crypto.randomBytes(20).toString('hex');
-
+		
 		const now = new Date();
 		now.setHours(now.getHours() + 1);
-
-		await User.findOneAndUpdate(user.id, {
+		
+		await User.findOneAndReplace(user.id, {
 			'$set': {
 				passwordResetToken: token,
 				passwordResetExpires: now, 
 			}
 		});
-
+		
 		mailer.sendMail({
 			to: email,
 			from: 'andre.skilomeu@gmail.com',
-			template: 'auth/forgot_password',
+			html: 'auth/forgot_password',
 			context: { token },
-		}, (err) => {
+		}, (err, info) => {
 			if (err) {
 				return res.status(400).send({ error: 'Cannot send forgot password e-mail' });
 			}
-			return res.send();
+			return res.send({ success: info.response });
 		})
-
+		
 	} catch (err) {
-		console.log(err)
 		return res.status(400).send({ error: 'Error on forgot password, try again' });
 	}
 })
